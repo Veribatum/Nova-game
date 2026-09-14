@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
-<title>VERIBATUM NOVA - GitHub Pages Auto-Load Fix</title>
+<title>VERIBATUM NOVA - GitHub Pages Auto-Load Fix - DEBUG</title>
 <script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
 <script type="importmap">
 {
@@ -18,7 +18,6 @@
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{width:100%;height:100%;overflow:hidden;background:#0a0e14;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;color:#d9e1ea}
   #c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
-  /* HUD */
   #hud{position:fixed;top:0;left:0;right:0;padding:14px 16px;pointer-events:none;display:flex;justify-content:space-between;align-items:flex-start;z-index:20}
   .bars{display:flex;flex-direction:column;gap:8px;min-width:210px}
   .bar-row{display:flex;align-items:center;gap:8px;font-size:10px;letter-spacing:0.12em;text-transform:uppercase}
@@ -31,33 +30,73 @@
   #mission h2{font-size:10px;letter-spacing:0.2em;color:#8af8ff;margin-bottom:6px}
   #mission p{font-size:11px;line-height:1.4}
   #mission .loc{color:#ffeb8a}
-  /* Controls hint */
   #hint{position:fixed;right:16px;bottom:92px;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.12);padding:8px 10px;font-size:9px;line-height:1.5;letter-spacing:0.08em;z-index:20;pointer-events:none}
-  /* Joystick */
   #joyWrap{position:fixed;left:18px;bottom:18px;width:118px;height:118px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);z-index:25;touch-action:none}
   #joyKnob{position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;background:rgba(138,248,255,0.22);border:1px solid rgba(138,248,255,0.5);box-shadow:0 0 18px rgba(138,248,255,0.25)}
   #fireBtn{position:fixed;right:18px;bottom:18px;width:92px;height:92px;border-radius:50%;background:rgba(255,77,90,0.18);border:1px solid rgba(255,77,90,0.55);color:#ffd1d5;display:grid;place-items:center;font-size:12px;letter-spacing:0.18em;z-index:25;touch-action:none;user-select:none;cursor:pointer}
   #fireBtn:active{background:rgba(255,77,90,0.35)}
-  /* Loading / Status */
-  #loader{position:fixed;inset:0;background:radial-gradient(120% 120% at 50% 0%, #15202e 0%, #0a0e14 62%);display:grid;place-items:center;z-index:40;transition:opacity 0.6s}
-  #loaderBox{width:min(520px,90vw);border:1px solid rgba(255,255,255,0.14);background:rgba(0,0,0,0.42);padding:22px 18px}
+  #miniWrap{position:fixed;top:14px;left:50%;transform:translateX(-50%);width:148px;height:148px;border-radius:2px;border:1px solid rgba(255,255,255,0.18);background:rgba(0,0,0,0.55);overflow:hidden;z-index:20;pointer-events:none}
+  #mini{width:100%;height:100%;display:block}
+  #loader{position:fixed;inset:0;background:radial-gradient(120% 120% at 50% 0%, #15202e 0%, #0a0e14 62%);display:grid;place-items:center;z-index:40;transition:opacity 0.6s;pointer-events:none}
+  #loaderBox{width:min(520px,90vw);border:1px solid rgba(255,255,255,0.14);background:rgba(0,0,0,0.42);padding:22px 18px;pointer-events:auto}
   #loaderBox h1{font-size:13px;letter-spacing:0.22em;margin-bottom:12px}
   #log{font-size:10px;line-height:1.6;color:#a9b6c6;max-height:220px;overflow:auto;white-space:pre-wrap;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);padding:10px}
   .ok{color:#8af8ff}.warn{color:#ffeb8a}.err{color:#ff8a8a}
-  /* Minimap */
-  #miniWrap{position:fixed;top:14px;left:50%;transform:translateX(-50%);width:148px;height:148px;border-radius:2px;border:1px solid rgba(255,255,255,0.18);background:rgba(0,0,0,0.55);overflow:hidden;z-index:20;pointer-events:none}
-  #mini{width:100%;height:100%;display:block}
-  /* Dev loader - hidden until L */
   #dev{position:fixed;inset:0;display:none;place-items:center;background:rgba(0,0,0,0.72);z-index:50}
   #dev.show{display:grid}
   #devBox{border:1px solid rgba(255,255,255,0.18);background:#111820;padding:18px;width:min(420px,90vw)}
   #devBox h3{font-size:11px;letter-spacing:0.18em;margin-bottom:10px}
   #devBox input{width:100%;margin:8px 0}
   #devBox button{margin-top:8px;padding:8px 12px;background:#1c2a38;border:1px solid rgba(255,255,255,0.18);color:#d9e1ea;cursor:pointer;font-size:11px;letter-spacing:0.12em}
+  /* NEW DEBUG PANEL - TOP CENTER 500px LIME ON BLACK */
+  #debugPanel{position:fixed;top:12px;left:50%;transform:translateX(-50%);width:500px;max-width:92vw;max-height:70vh;overflow:auto;background:#000;color:#b6ff9a;border:1px solid #4aff3d;z-index:100;pointer-events:auto;padding:12px 12px 10px 12px;font-family:ui-monospace,Menlo,monospace;box-shadow:0 0 22px rgba(74,255,61,0.22), 0 8px 30px rgba(0,0,0,0.8)}
+  #debugPanel h1{font-size:12px;letter-spacing:0.18em;color:#4aff3d;margin-bottom:8px;line-height:1.2}
+  #debugPanel .sub{font-size:10px;color:#8a8a8a;line-height:1.5;margin-bottom:8px;white-space:pre-wrap}
+  #debugPanel .warnBox{background:rgba(255,235,138,0.08);border:1px solid rgba(255,235,138,0.3);color:#ffeb8a;padding:8px 8px;font-size:10px;line-height:1.5;margin-bottom:10px}
+  #debugList{margin:6px 0 8px 0;border-top:1px dashed rgba(74,255,61,0.25);padding-top:8px}
+  .debugRow{font-size:10px;line-height:1.4;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;gap:6px}
+  .debugRow .idx{color:#666;min-width:18px}
+  .debugRow .url{color:#b6ff9a;word-break:break-all;flex:1}
+  .debugRow .status{color:#ff8a8a;white-space:nowrap}
+  .debugRow.ok .status{color:#4aff3d}
+  .debugRow.trying .status{color:#ffeb8a}
+  .debugErr{color:#ff4d5a;font-size:10px;background:rgba(255,77,90,0.08);border-left:2px solid #ff4d5a;padding:4px 6px;margin:4px 0 6px 18px;white-space:pre-wrap;word-break:break-word}
+  #debugActions{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 6px 0}
+  .dbgBtn{padding:8px 10px;font-size:10px;letter-spacing:0.12em;cursor:pointer;border:1px solid rgba(255,255,255,0.2);background:#111;color:#d9e1ea}
+  .dbgBtn.lime{background:#0f1f0e;border-color:#4aff3d;color:#4aff3d}
+  .dbgBtn.big{background:#4aff3d;color:#000;border-color:#4aff3d;font-weight:800;font-size:11px;padding:12px 14px;width:100%;margin-top:6px}
+  .dbgBtn.big:hover{background:#7aff74}
+  #debugFooter{font-size:9px;color:#6a6a6a;margin-top:8px;line-height:1.4}
+  #debugPanel.hidden{display:none}
+  #debugToggle{position:fixed;top:6px;left:50%;transform:translateX(-50%);z-index:101;background:#000;border:1px solid #4aff3d;color:#4aff3d;padding:4px 8px;font-size:9px;letter-spacing:0.12em;display:none;cursor:pointer}
+  #debugToggle.show{display:block}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
+
+<!-- DEBUG PANEL TOP CENTER -->
+<div id="debugPanel">
+  <h1>DEBUG // GITHUB PAGES AUTO-LOAD FAILURE</h1>
+  <div class="warnBox">GitHub Pages is case-sensitive! Your folder is <b>Assets/models</b> but GitHub might serve as <b>assets</b>. Also file must be &lt;100MB. Check DevTools Console F12 -&gt; Network tab for 404. This panel stays until Nova loads.</div>
+  <div class="sub">Auto-boot sequence — will TRY each URL with fetch HEAD first, then GLTFLoader.load. Aggressive fallback: if one fails, tries next automatically.
+Open DevTools F12 -> Console for full logs.
+Game remains playable as bunny capsule even if models fail for daughter playtest.</div>
+  <div style="font-size:10px;color:#4aff3d;margin:8px 0 2px 0;letter-spacing:0.12em">NOVA.GLB ATTEMPTS:</div>
+  <div id="debugList"></div>
+  <div style="font-size:10px;color:#4aff3d;margin:8px 0 2px 0;letter-spacing:0.12em">WALL.GLB ATTEMPTS:</div>
+  <div id="debugWallList"></div>
+  <div id="debugLogDetailed" style="margin-top:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);padding:8px;max-height:160px;overflow:auto;white-space:pre-wrap;font-size:9px;color:#a9b6c6"></div>
+  <div id="debugActions">
+    <button class="dbgBtn lime" id="copyDebugBtn">COPY DEBUG LOG</button>
+    <button class="dbgBtn" id="hideDebugBtn">HIDE PANEL (SHOW WITH D)</button>
+    <button class="dbgBtn" id="retryBtn">RETRY AUTO-LOAD</button>
+  </div>
+  <button class="dbgBtn big" id="manualNovaBtn">SELECT NOVA.GLB FILE MANUALLY — FOR PLAYTEST</button>
+  <button class="dbgBtn big" id="manualWallBtn" style="background:#111;color:#8af8ff;border-color:#8af8ff">SELECT WALL.GLB FILE MANUALLY</button>
+  <div id="debugFooter">Tip: If you see 404 on ./Assets/models/nova.glb but 200 on raw.githubusercontent.com, your repo has wrong folder case or file &gt;100MB. GitHub Pages hides files &gt;100MB. Rename folder to lowercase assets/models or add both cases. Add cache bust ?v= timestamp to force refresh.</div>
+</div>
+<button id="debugToggle">SHOW DEBUG [D]</button>
 
 <div id="hud">
   <div class="bars">
@@ -66,28 +105,22 @@
   </div>
   <div id="ammo">12 / 36 • AUTO-RIFLE</div>
 </div>
-
 <div id="miniWrap"><canvas id="mini" width="148" height="148"></canvas></div>
-
 <div id="mission">
   <h2 id="missionTitle">MISSION // OPERATION VERIBATUM</h2>
   <p><span class="loc" id="missionLoc">BREACH AIRLOCK • START</span><br><span id="missionDesc">Infiltrate the derelict freighter. Nova auto-loaded at dock.</span></p>
-  <p style="margin-top:8px;font-size:9px;opacity:0.7">B = Bright toggle • L = Dev loader • F = Knife • C = Crouch • Q = Stealth • E = Hack</p>
+  <p style="margin-top:8px;font-size:9px;opacity:0.7">B = Bright toggle • D = Debug panel • L = Dev loader • F = Knife • C = Crouch • Q = Stealth • E = Hack</p>
 </div>
-
 <div id="hint">W/S FWD/BACK • A/D TURN • Q/E STRAFE<br>LMB / FIRE • F KNIFE • C CROUCH • Q HOLD STEALTH<br>CAM CLOSE 2.0 • BACK 1.35 • UP 6.5 • FOV 62</div>
-
 <div id="joyWrap"><div id="joyKnob"></div></div>
 <div id="fireBtn">FIRE</div>
-
 <div id="loader">
   <div id="loaderBox">
     <h1>VERIBATUM NOVA // AUTO-BOOT</h1>
     <div id="log"></div>
-    <p style="margin-top:10px;font-size:9px;opacity:0.6">GitHub Pages fix • Relative paths only • No /Assets absolute • Place GLBs in Assets/models/nova.glb and Assets/models/walls/Wall.glb</p>
+    <p style="margin-top:10px;font-size:9px;opacity:0.6">GitHub Pages fix • Relative paths only • Debug overlay active • Place GLBs in Assets/models/nova.glb and Assets/models/walls/Wall.glb</p>
   </div>
 </div>
-
 <div id="dev">
   <div id="devBox">
     <h3>DEV OVERRIDE (press L to toggle)</h3>
@@ -96,49 +129,35 @@
     <label style="font-size:10px">Wall GLB</label>
     <input id="wallFile" type="file" accept=".glb,.gltf"/>
     <button id="devClose">CLOSE</button>
-    <p style="font-size:9px;opacity:0.6;margin-top:10px">These inputs are hidden in normal play. Auto-load will try ./Assets/models/nova.glb first.</p>
+    <p style="font-size:9px;opacity:0.6;margin-top:10px">Hidden dev loader. Use big green manual buttons in debug panel for playtest.</p>
   </div>
 </div>
 
 <script type="module">
-/*
-  VERIBATUM NOVA - GitHub Pages Auto-Load Fix
-  ------------------------------------------------
-  WHERE TO PUT YOUR MODELS (relative to index.html):
-    ./Assets/models/nova.glb              <- Nova character (required)
-    ./Assets/models/walls/Wall.glb        <- Wall template (tiled)
-
-  Fallbacks tried automatically:
-    nova: ./Assets/models/nova.glb, ./assets/models/nova.glb, ./Assets/models/Nova.glb, ./nova.glb, ./Assets/models/nova/Nova.glb
-    wall: ./Assets/models/walls/Wall.glb, ./assets/models/walls/Wall.glb, ./Assets/models/walls/wall.glb, ./Wall.glb
-
-  WHAT THIS FIX DOES:
-  - No LOAD YOUR MODEL button needed. Auto-boot on page load.
-  - Bright test mode default (ambient 1.8, hemi 1.2, sun 2.0) for daughter playtest.
-  - Press B to toggle bright / stealth-dark.
-  - If Wall.glb loads, all placeholder Box walls are replaced with clones tiled along each segment.
-
-  CAMERA PRESET from cec73b6e468a:
-    close 2.0, back 1.35, up 6.5, forward 0, FOV 62
-  CONTROLS:
-    A/D turn left/right, W/S fwd/back, Q/E strafe, mouse drag turn, joystick.
-*/
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { SkeletonUtils } from 'three/addons/utils/SkeletonUtils.js';
 
 const logEl = document.getElementById('log');
-function log(msg, cls=''){ const d=document.createElement('div'); d.textContent='> '+msg; if(cls) d.className=cls; logEl.appendChild(d); logEl.scrollTop=logEl.scrollHeight; console.log(msg); }
+const debugListEl = document.getElementById('debugList');
+const debugWallListEl = document.getElementById('debugWallList');
+const debugDetailedEl = document.getElementById('debugLogDetailed');
+const debugPanelEl = document.getElementById('debugPanel');
+const debugToggleEl = document.getElementById('debugToggle');
+
+let debugLogStore = [];
+function pushDebugLog(s){ debugLogStore.push(s); if(debugDetailedEl){ debugDetailedEl.textContent = debugLogStore.join('\n'); debugDetailedEl.scrollTop = debugDetailedEl.scrollHeight; } console.log('[DEBUG] '+s); }
+function log(msg, cls){ var d=document.createElement('div'); d.textContent='> '+msg; if(cls) d.className=cls; if(logEl){ logEl.appendChild(d); logEl.scrollTop=logEl.scrollHeight; } pushDebugLog('> '+msg); }
 function logOk(m){ log(m,'ok'); }
 function logWarn(m){ log(m,'warn'); }
 function logErr(m){ log(m,'err'); }
 
-log('Auto-loading ./Assets/models/nova.glb...');
-log('Renderer init — GitHub Pages relative path mode');
+log('Auto-loading ./Assets/models/nova.glb... DEBUG MODE ON');
+log('Renderer init — GitHub Pages relative path mode with HEAD check');
 
-// --- THREE SETUP ---
-const canvas = document.getElementById('c');
-const renderer = new THREE.WebGLRenderer({canvas, antialias:true, powerPreference:'high-performance'});
+// THREE SETUP
+var canvas = document.getElementById('c');
+var renderer = new THREE.WebGLRenderer({canvas:canvas, antialias:true, powerPreference:'high-performance'});
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.setSize(innerWidth, innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -146,71 +165,38 @@ renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.15;
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-const scene = new THREE.Scene();
+var scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0a0e14);
 scene.fog = new THREE.Fog(0x0a0e14, 28, 72);
-
-const camera = new THREE.PerspectiveCamera(62, innerWidth/innerHeight, 0.1, 300);
-// Camera preset: close 2.0 back 1.35 up 6.5 fwd
-let camBack = 2.0 + 1.35; // 3.35
-let camUp = 6.5;
-let camFwd = 0.15;
-let camClose = 2.0;
-let isBright = true;
-
-let ambient = new THREE.AmbientLight(0xffffff, 1.8);
-let hemi = new THREE.HemisphereLight(0xc8e8ff, 0x1a2a2a, 1.2);
-let sun = new THREE.DirectionalLight(0xfff6e8, 2.0);
-sun.position.set(14,22,10);
-sun.castShadow = true;
-sun.shadow.mapSize.set(2048,2048);
-sun.shadow.camera.near=1; sun.shadow.camera.far=80;
-sun.shadow.camera.left=-30; sun.shadow.camera.right=30; sun.shadow.camera.top=30; sun.shadow.camera.bottom=-30;
+var camera = new THREE.PerspectiveCamera(62, innerWidth/innerHeight, 0.1, 300);
+var camBack = 3.35; var camUp = 6.5; var camFwd = 0.15; var isBright = true;
+var ambient = new THREE.AmbientLight(0xffffff, 1.8);
+var hemi = new THREE.HemisphereLight(0xc8e8ff, 0x1a2a2a, 1.2);
+var sun = new THREE.DirectionalLight(0xfff6e8, 2.0);
+sun.position.set(14,22,10); sun.castShadow=true; sun.shadow.mapSize.set(2048,2048); sun.shadow.camera.near=1; sun.shadow.camera.far=80; sun.shadow.camera.left=-30; sun.shadow.camera.right=30; sun.shadow.camera.top=30; sun.shadow.camera.bottom=-30;
 scene.add(ambient, hemi, sun);
-const fillLight = new THREE.DirectionalLight(0x8ab8ff, 0.6); fillLight.position.set(-12,10,-14); scene.add(fillLight);
-
-function setBrightMode(b){
-  isBright=b;
-  if(b){ ambient.intensity=1.8; hemi.intensity=1.2; sun.intensity=2.0; scene.fog.near=28; scene.fog.far=72; renderer.toneMappingExposure=1.15; }
-  else { ambient.intensity=0.35; hemi.intensity=0.5; sun.intensity=0.9; scene.fog.near=14; scene.fog.far=42; renderer.toneMappingExposure=0.95; }
-  log(b?'Bright test mode ON (daughter playtest)':'Dark stealth mode ON','ok');
-}
+var fillLight = new THREE.DirectionalLight(0x8ab8ff, 0.6); fillLight.position.set(-12,10,-14); scene.add(fillLight);
+function setBrightMode(b){ isBright=b; if(b){ ambient.intensity=1.8; hemi.intensity=1.2; sun.intensity=2.0; scene.fog.near=28; scene.fog.far=72; renderer.toneMappingExposure=1.15; } else { ambient.intensity=0.35; hemi.intensity=0.5; sun.intensity=0.9; scene.fog.near=14; scene.fog.far=42; renderer.toneMappingExposure=0.95; } log(b?'Bright test mode ON (daughter playtest)':'Dark stealth mode ON','ok'); }
 setBrightMode(true);
-
-// floor
-const floorGeo = new THREE.PlaneGeometry(200,200);
-const floorMat = new THREE.MeshStandardMaterial({color:0x141c26, roughness:0.85, metalness:0.05});
-const floor = new THREE.Mesh(floorGeo, floorMat); floor.rotation.x=-Math.PI/2; floor.receiveShadow=true; scene.add(floor);
-const grid = new THREE.GridHelper(200, 40, 0x223040, 0x1a2532); grid.position.y=0.01; scene.add(grid);
-
-// character root
-const charRoot = new THREE.Group(); scene.add(charRoot);
-let novaModel = null;
-let mixer = null;
-let placeholderMesh = null;
-
-// placeholder Nova (capsule + visor)
+var floorGeo = new THREE.PlaneGeometry(200,200);
+var floorMat = new THREE.MeshStandardMaterial({color:0x141c26, roughness:0.85, metalness:0.05});
+var floor = new THREE.Mesh(floorGeo, floorMat); floor.rotation.x=-Math.PI/2; floor.receiveShadow=true; scene.add(floor);
+var grid = new THREE.GridHelper(200, 40, 0x223040, 0x1a2532); grid.position.y=0.01; scene.add(grid);
+var charRoot = new THREE.Group(); scene.add(charRoot);
+var novaModel = null; var mixer = null; var placeholderMesh = null;
 {
-  const g = new THREE.Group();
-  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.35, 1.1, 4, 12), new THREE.MeshStandardMaterial({color:0x8af8ff, emissive:0x0a2a3a, emissiveIntensity:0.6, roughness:0.4, metalness:0.3}));
+  var g = new THREE.Group();
+  var body = new THREE.Mesh(new THREE.CapsuleGeometry(0.35, 1.1, 4, 12), new THREE.MeshStandardMaterial({color:0x8af8ff, emissive:0x0a2a3a, emissiveIntensity:0.6, roughness:0.4, metalness:0.3}));
   body.castShadow=true; body.position.y=1.0;
-  const visor = new THREE.Mesh(new THREE.SphereGeometry(0.28,16,12), new THREE.MeshStandardMaterial({color:0x111820, emissive:0x8af8ff, emissiveIntensity:1.2, roughness:0.2, metalness:0.7}));
+  var visor = new THREE.Mesh(new THREE.SphereGeometry(0.28,16,12), new THREE.MeshStandardMaterial({color:0x111820, emissive:0x8af8ff, emissiveIntensity:1.2, roughness:0.2, metalness:0.7}));
   visor.position.set(0,1.55,0.18); visor.scale.set(1,0.8,0.5);
   g.add(body, visor);
-  placeholderMesh = g;
-  charRoot.add(g);
+  placeholderMesh = g; charRoot.add(g);
 }
 charRoot.position.set(0,0,0);
-
-// wall system
-const wallGroup = new THREE.Group(); scene.add(wallGroup);
-const placeholderWalls = [];
-let wallTemplate = null;
-let wallTemplateSize = new THREE.Vector3(2,3,0.4); // fallback
-
-// Mission layout - 8 zones
-const missionZones = [
+var wallGroup = new THREE.Group(); scene.add(wallGroup);
+var placeholderWalls = []; var wallTemplate = null; var wallTemplateSize = new THREE.Vector3(2,3,0.4);
+var missionZones = [
   {id:'airlock', name:'BREACH AIRLOCK • START', desc:'Infiltrate the derelict freighter. Nova auto-loaded at dock.', pos:new THREE.Vector3(0,0,8), radius:4},
   {id:'checkpoint', name:'SECURITY CHECKPOINT', desc:'Bypass patrol. Use Q stealth. Hack terminal with E.', pos:new THREE.Vector3(0,0,-6), radius:5},
   {id:'cargo', name:'CENTRAL CARGO', desc:'Large open hold. Walls will be Wall.glb clones if loaded.', pos:new THREE.Vector3(14,0,-6), radius:7},
@@ -220,368 +206,236 @@ const missionZones = [
   {id:'command', name:'COMMAND DECK', desc:'Commander patrol. Use knife F for silent takedown.', pos:new THREE.Vector3(0,0,-28), radius:6},
   {id:'exfil', name:'EXFIL • DOCKING BAY', desc:'Extract with data. Final stand.', pos:new THREE.Vector3(0,0,-42), radius:5},
 ];
-
-function createWallSegment(a,b,height=3.2,thickness=0.5){
-  const dir = new THREE.Vector3().subVectors(b,a);
-  const len = dir.length();
-  const mid = new THREE.Vector3().addVectors(a,b).multiplyScalar(0.5);
-  const geo = new THREE.BoxGeometry(len, height, thickness);
-  const mat = new THREE.MeshStandardMaterial({color:0x232f3e, roughness:0.85, metalness:0.1});
-  const m = new THREE.Mesh(geo, mat);
-  m.position.set(mid.x, height/2, mid.z);
-  m.lookAt(b.x, height/2, b.z);
-  m.castShadow=true; m.receiveShadow=true;
-  m.userData = {a:a.clone(), b:b.clone(), len, height, thickness};
-  wallGroup.add(m);
-  placeholderWalls.push(m);
-  return m;
+function createWallSegment(a,b,height,thickness){
+  if(height===undefined) height=3.2; if(thickness===undefined) thickness=0.5;
+  var dir = new THREE.Vector3().subVectors(b,a); var len = dir.length(); var mid = new THREE.Vector3().addVectors(a,b).multiplyScalar(0.5);
+  var geo = new THREE.BoxGeometry(len, height, thickness); var mat = new THREE.MeshStandardMaterial({color:0x232f3e, roughness:0.85, metalness:0.1});
+  var m = new THREE.Mesh(geo, mat); m.position.set(mid.x, height/2, mid.z); m.lookAt(b.x, height/2, b.z); m.castShadow=true; m.receiveShadow=true;
+  m.userData = {a:a.clone(), b:b.clone(), len:len, height:height, thickness:thickness}; wallGroup.add(m); placeholderWalls.push(m); return m;
 }
-
-// Build level based on screenshots layout
 function buildLevel(){
-  // Clear
-  placeholderWalls.length=0;
-  wallGroup.clear();
-
-  // Airlock start box
+  placeholderWalls.length=0; wallGroup.clear();
   createWallSegment(new THREE.Vector3(-5,0,12), new THREE.Vector3(5,0,12));
   createWallSegment(new THREE.Vector3(-5,0,12), new THREE.Vector3(-5,0,4));
   createWallSegment(new THREE.Vector3(5,0,12), new THREE.Vector3(5,0,4));
-  // Checkpoint corridor
   createWallSegment(new THREE.Vector3(-5,0,4), new THREE.Vector3(-5,0,-10));
   createWallSegment(new THREE.Vector3(5,0,4), new THREE.Vector3(5,0,-10));
-  // Central cargo walls
   createWallSegment(new THREE.Vector3(5,0,-2), new THREE.Vector3(12,0,-2));
   createWallSegment(new THREE.Vector3(12,0,-2), new THREE.Vector3(12,0,-12));
   createWallSegment(new THREE.Vector3(12,0,-12), new THREE.Vector3(22,0,-12));
   createWallSegment(new THREE.Vector3(22,0,-12), new THREE.Vector3(22,0,0));
   createWallSegment(new THREE.Vector3(22,0,0), new THREE.Vector3(5,0,0));
-  // corridor A
   createWallSegment(new THREE.Vector3(12,0,-12), new THREE.Vector3(12,0,-28));
   createWallSegment(new THREE.Vector3(16,0,-12), new THREE.Vector3(16,0,-28));
-  // Engineering left side
   createWallSegment(new THREE.Vector3(-5,0,0), new THREE.Vector3(-12,0,0));
   createWallSegment(new THREE.Vector3(-12,0,0), new THREE.Vector3(-12,0,-14));
   createWallSegment(new THREE.Vector3(-22,0,-14), new THREE.Vector3(-12,0,-14));
   createWallSegment(new THREE.Vector3(-22,0,-14), new THREE.Vector3(-22,0,-2));
   createWallSegment(new THREE.Vector3(-22,0,-2), new THREE.Vector3(-5,0,-2));
-  // vault extension
   createWallSegment(new THREE.Vector3(-22,0,-14), new THREE.Vector3(-22,0,-30));
   createWallSegment(new THREE.Vector3(-12,0,-14), new THREE.Vector3(-12,0,-30));
   createWallSegment(new THREE.Vector3(-22,0,-30), new THREE.Vector3(-12,0,-30));
-  // command / exfil spine
   createWallSegment(new THREE.Vector3(-5,0,-10), new THREE.Vector3(-5,0,-36));
   createWallSegment(new THREE.Vector3(5,0,-28), new THREE.Vector3(5,0,-46));
   createWallSegment(new THREE.Vector3(-5,0,-36), new THREE.Vector3(5,0,-36));
   createWallSegment(new THREE.Vector3(-8,0,-46), new THREE.Vector3(8,0,-46));
   createWallSegment(new THREE.Vector3(-8,0,-36), new THREE.Vector3(-8,0,-46));
   createWallSegment(new THREE.Vector3(8,0,-36), new THREE.Vector3(8,0,-46));
-
-  // terminals for hack E
-  missionZones.forEach(z=>{
-    const term = new THREE.Mesh(new THREE.BoxGeometry(0.6,1.1,0.4), new THREE.MeshStandardMaterial({color:0x00ffaa, emissive:0x00ffaa, emissiveIntensity:0.8}));
-    term.position.set(z.pos.x+1.2,0.55,z.pos.z); term.castShadow=true; term.userData.isTerminal=true; term.userData.zone=z;
-    wallGroup.add(term);
-  });
+  missionZones.forEach(function(z){ var term = new THREE.Mesh(new THREE.BoxGeometry(0.6,1.1,0.4), new THREE.MeshStandardMaterial({color:0x00ffaa, emissive:0x00ffaa, emissiveIntensity:0.8})); term.position.set(z.pos.x+1.2,0.55,z.pos.z); term.castShadow=true; term.userData.isTerminal=true; term.userData.zone=z; wallGroup.add(term); });
 }
 buildLevel();
-
-// Wall template tiling
-function computeTemplateLength(obj){
-  const box = new THREE.Box3().setFromObject(obj);
-  const size = new THREE.Vector3(); box.getSize(size);
-  // assume length is longest horizontal axis
-  return Math.max(size.x, size.z, 1.0);
-}
+function computeTemplateLength(obj){ var box = new THREE.Box3().setFromObject(obj); var size = new THREE.Vector3(); box.getSize(size); return Math.max(size.x, size.z, 1.0); }
 function replaceWallsWithTemplate(){
-  if(!wallTemplate){ return 0; }
-  const tLen = computeTemplateLength(wallTemplate);
-  wallTemplateSize.set(tLen, wallTemplateSize.y, wallTemplateSize.z);
-  logOk('Wall template bbox length: '+tLen.toFixed(3));
-
-  // remove placeholders
-  placeholderWalls.forEach(m=>{ wallGroup.remove(m); m.geometry?.dispose(); });
-  const segs = placeholderWalls.map(w=>w.userData);
-  placeholderWalls.length=0;
-
-  let totalClones = 0;
-  segs.forEach(seg=>{
-    const dir = new THREE.Vector3().subVectors(seg.b, seg.a);
-    const totalLen = dir.length();
-    const count = Math.max(1, Math.ceil(totalLen / tLen));
-    const step = dir.clone().divideScalar(count);
-    for(let i=0;i<count;i++){
-      const pos = seg.a.clone().add(step.clone().multiplyScalar(i+0.5));
-      const clone = SkeletonUtils.clone(wallTemplate);
-      // scale to fit segment length if needed
-      const scaleX = (totalLen / count) / tLen;
-      clone.scale.set(scaleX, 1, 1);
-      clone.position.set(pos.x, 0, pos.z);
-      // rotate to face along segment
-      const angle = Math.atan2(dir.x, dir.z);
-      clone.rotation.y = angle + Math.PI/2;
-      clone.traverse(o=>{ if(o.isMesh){ o.castShadow=true; o.receiveShadow=true; }});
-      wallGroup.add(clone);
-      totalClones++;
-    }
-  });
-  return totalClones;
+  if(!wallTemplate){ return 0; } var tLen = computeTemplateLength(wallTemplate); wallTemplateSize.set(tLen, wallTemplateSize.y, wallTemplateSize.z); logOk('Wall template bbox length: '+tLen.toFixed(3));
+  var segs = placeholderWalls.map(function(w){ return w.userData; }); placeholderWalls.forEach(function(m){ wallGroup.remove(m); if(m.geometry) m.geometry.dispose(); }); placeholderWalls.length=0;
+  var totalClones=0; segs.forEach(function(seg){ if(!seg) return; var dir = new THREE.Vector3().subVectors(seg.b, seg.a); var totalLen = dir.length(); var count = Math.max(1, Math.ceil(totalLen / tLen)); var step = dir.clone().divideScalar(count); for(var i=0;i<count;i++){ var pos = seg.a.clone().add(step.clone().multiplyScalar(i+0.5)); var clone = SkeletonUtils.clone(wallTemplate); var scaleX = (totalLen / count) / tLen; clone.scale.set(scaleX, 1, 1); clone.position.set(pos.x, 0, pos.z); var angle = Math.atan2(dir.x, dir.z); clone.rotation.y = angle + Math.PI/2; clone.traverse(function(o){ if(o.isMesh){ o.castShadow=true; o.receiveShadow=true; }}); wallGroup.add(clone); totalClones++; } }); return totalClones;
 }
 
-// --- Loader ---
-const loader = new GLTFLoader();
-function tryLoad(paths, onOk, onFail, label){
-  let idx=0;
-  function attempt(){
-    if(idx>=paths.length){ onFail(); return; }
-    const p = paths[idx++]; log('Trying '+p+' ...');
-    loader.load(p, (gltf)=>{
-      logOk(label+' loaded: '+p); onOk(gltf, p);
-    }, undefined, (e)=>{
-      logWarn('Failed '+p+' ('+(e?.message||'404')+')');
-      attempt();
+// --- AGGRESSIVE DEBUG LOADER WITH HEAD CHECK ---
+var loader = new GLTFLoader();
+var novaLoaded = false;
+var wallLoaded = false;
+var debugEntriesNova = [];
+var debugEntriesWall = [];
+
+function formatSize(bytes){
+  if(!bytes) return ''; var b=parseInt(bytes,10); if(isNaN(b)) return ''; if(b>1024*1024) return (b/1024/1024).toFixed(2)+'MB'; if(b>1024) return (b/1024).toFixed(1)+'KB'; return b+'B';
+}
+function renderDebugLists(){
+  if(!debugListEl || !debugWallListEl) return;
+  debugListEl.innerHTML=''; debugWallListEl.innerHTML='';
+  debugEntriesNova.forEach(function(e,i){
+    var row=document.createElement('div'); row.className='debugRow '+(e.ok?'ok':(e.trying?'trying':'')); row.innerHTML='<span class="idx">'+(i+1)+'.</span><span class="url">'+e.url+'</span><span class="status">'+e.statusText+'</span>';
+    debugListEl.appendChild(row); if(e.error){ var err=document.createElement('div'); err.className='debugErr'; err.textContent='THREE.GLTFLoader: '+e.error; debugListEl.appendChild(err); }
+  });
+  debugEntriesWall.forEach(function(e,i){
+    var row=document.createElement('div'); row.className='debugRow '+(e.ok?'ok':(e.trying?'trying':'')); row.innerHTML='<span class="idx">'+(i+1)+'.</span><span class="url">'+e.url+'</span><span class="status">'+e.statusText+'</span>';
+    debugWallListEl.appendChild(row); if(e.error){ var err=document.createElement('div'); err.className='debugErr'; err.textContent='THREE.GLTFLoader: '+e.error; debugWallListEl.appendChild(err); }
+  });
+}
+function addDebugEntry(list, url, statusText, ok, trying, error){
+  var entry={url:url, statusText:statusText, ok:!!ok, trying:!!trying, error:error||null}; list.push(entry); renderDebugLists(); pushDebugLog((ok?'OK ':'TRY ')+url+' -> '+statusText+(error?' | GLTF ERR: '+error:'')); return entry;
+}
+function updateDebugEntry(entry, statusText, ok, error){
+  entry.statusText=statusText; entry.ok=!!ok; entry.trying=false; entry.error=error||null; renderDebugLists(); pushDebugLog('  => '+entry.url+' -> '+statusText+(error?' | '+error:''));
+}
+
+function fetchHeadCheck(url){
+  // try HEAD first, then fallback to GET with range if HEAD blocked
+  return fetch(url, {method:'HEAD', cache:'no-store'}).then(function(res){
+    var size=res.headers.get('content-length')||''; return {status:res.status, ok:res.ok, size:size, statusText: res.ok ? '200 OK '+(size?formatSize(size):'') : res.status+' '+res.statusText};
+  }).catch(function(){
+    // some hosts block HEAD, try GET 0-1
+    return fetch(url, {method:'GET', headers:{'Range':'bytes=0-1'}, cache:'no-store'}).then(function(res){
+      var size=res.headers.get('content-range')||res.headers.get('content-length')||''; if(res.status===206) return {status:200, ok:true, size:size, statusText:'200 OK (via GET) '+(size?formatSize(size):'')}; return {status:res.status, ok:res.ok, size:size, statusText: res.status+' '+res.statusText};
+    }).catch(function(err){ return {status:0, ok:false, size:'', statusText:'FETCH ERR '+err.message}; });
+  });
+}
+
+function loadGLBWithFallback(paths, listEntries, onSuccess, onAllFail, label){
+  var idx=0;
+  function next(){
+    if(idx>=paths.length){ onAllFail(); return; }
+    var url = paths[idx++]; var entry = addDebugEntry(listEntries, url, 'CHECKING HEAD...', false, true, null);
+    fetchHeadCheck(url).then(function(head){
+      if(head.ok){
+        updateDebugEntry(entry, head.statusText+' — loading GLB...', false, null); entry.trying=true; renderDebugLists();
+        loader.load(url, function(gltf){ updateDebugEntry(entry, head.statusText+' + GLTF OK', true, null); onSuccess(gltf, url); }, undefined, function(err){
+          var msg = (err && (err.message || err.target && err.target.statusText)) || 'Unknown loader error'; if(err && err.message) msg=err.message; updateDebugEntry(entry, head.statusText+' -> GLTF FAIL', false, msg); logErr(label+' GLTFLoader failed '+url+' : '+msg); setTimeout(next, 250);
+        });
+      } else {
+        updateDebugEntry(entry, head.statusText, false, null); logWarn(label+' HEAD '+url+' -> '+head.statusText); setTimeout(next, 150);
+      }
     });
   }
-  attempt();
+  next();
 }
 
-const novaPaths = ['./Assets/models/nova.glb','./assets/models/nova.glb','./Assets/models/Nova.glb','./Assets/models/nova/Nova.glb','./nova.glb','./Nova.glb'];
-const wallPaths = ['./Assets/models/walls/Wall.glb','./assets/models/walls/Wall.glb','./Assets/models/walls/wall.glb','./Wall.glb','./assets/models/walls/Wall.GLb'];
+var cacheBust = Date.now();
+var novaPaths = [
+  './Assets/models/nova.glb',
+  './assets/models/nova.glb',
+  './Assets/models/nova.glb?v='+cacheBust,
+  './models/nova.glb',
+  './nova.glb',
+  'https://raw.githubusercontent.com/Veribatum/Nova-game/main/Assets/models/nova.glb',
+  'https://raw.githubusercontent.com/Veribatum/Nova-game/main/assets/models/nova.glb'
+];
+var wallPaths = [
+  './Assets/models/walls/Wall.glb',
+  './assets/models/walls/Wall.glb',
+  './Assets/models/walls/wall.glb',
+  './assets/models/walls/wall.glb',
+  './Wall.glb',
+  './walls/Wall.glb',
+  'https://raw.githubusercontent.com/Veribatum/Nova-game/main/Assets/models/walls/Wall.glb',
+  'https://raw.githubusercontent.com/Veribatum/Nova-game/main/assets/models/walls/Wall.glb'
+];
 
-tryLoad(novaPaths, (gltf, path)=>{
-  const model = gltf.scene || gltf.scenes[0];
-  // normalize
-  model.traverse(o=>{ if(o.isMesh){ o.castShadow=true; o.frustumCulled=false; }});
-  // scale fix - assume model ~1.8m tall, adjust
-  const box = new THREE.Box3().setFromObject(model);
-  const size = new THREE.Vector3(); box.getSize(size);
-  const desiredH = 1.85;
-  const s = desiredH / (size.y||1.85);
-  model.scale.setScalar(s*1.0);
-  // center
-  const center = new THREE.Vector3(); box.getCenter(center);
-  model.position.sub(center); model.position.y += 0.9;
-  if(placeholderMesh) charRoot.remove(placeholderMesh);
-  novaModel = model;
-  charRoot.add(novaModel);
-  if(gltf.animations && gltf.animations.length){
-    mixer = new THREE.AnimationMixer(novaModel);
-    const clip = gltf.animations.find(c=>/idle|breath|stand/i.test(c.name)) || gltf.animations[0];
-    mixer.clipAction(clip).play();
-    logOk('Nova anim: '+gltf.animations.length+' clips, playing '+clip.name);
-  }
-  logOk('Nova ready — placeholder removed');
-  checkReady();
-}, ()=>{
-  logErr('Nova GLB not found — using placeholder capsule. Place file at ./Assets/models/nova.glb');
-  checkReady();
-}, 'Nova character');
+function onNovaSuccess(gltf, path){
+  if(novaLoaded) return; novaLoaded=true;
+  var model = gltf.scene || gltf.scenes[0]; model.traverse(function(o){ if(o.isMesh){ o.castShadow=true; o.frustumCulled=false; }});
+  var box = new THREE.Box3().setFromObject(model); var size = new THREE.Vector3(); box.getSize(size); var desiredH=1.85; var s=desiredH/(size.y||1.85); model.scale.setScalar(s*1.0); var center=new THREE.Vector3(); box.getCenter(center); model.position.sub(center); model.position.y+=0.9;
+  if(placeholderMesh) charRoot.remove(placeholderMesh); if(novaModel) charRoot.remove(novaModel); novaModel=model; charRoot.add(novaModel);
+  if(gltf.animations && gltf.animations.length){ mixer=new THREE.AnimationMixer(novaModel); var clip=gltf.animations.find(function(c){ return /idle|breath|stand/i.test(c.name); })||gltf.animations[0]; mixer.clipAction(clip).play(); logOk('Nova anim: '+gltf.animations.length+' clips, playing '+clip.name); }
+  logOk('Nova ready from '+path+' — placeholder removed'); pushDebugLog('*** NOVA SUCCESS '+path+' ***'); checkReady();
+  if(novaLoaded){ setTimeout(function(){ if(debugPanelEl){ debugPanelEl.classList.add('hidden'); debugToggleEl.classList.add('show'); debugToggleEl.textContent='DEBUG OK - SHOW [D]'; } }, 3000); }
+}
+function onNovaAllFail(){
+  logErr('Nova GLB NOT FOUND after all tries — using bunny capsule for daughter playtest. Panel stays visible. Use SELECT MANUAL button.'); pushDebugLog('*** NOVA ALL FAIL - keep bunny playable ***'); checkReady(); var btn=document.getElementById('manualNovaBtn'); if(btn){ btn.style.display='block'; btn.textContent='⚠ ALL AUTO-TRIES FAILED — SELECT NOVA.GLB FILE MANUALLY'; btn.style.background='#ffeb8a'; }
+}
+function onWallSuccess(gltf, path){
+  if(wallLoaded) return; wallLoaded=true; wallTemplate=gltf.scene||gltf.scenes[0]; wallTemplate.traverse(function(o){ if(o.isMesh){ o.castShadow=true; o.receiveShadow=true; }}); var count=replaceWallsWithTemplate(); logOk('Wall template auto-loaded: '+path+' -> '+count+' segments replaced'); pushDebugLog('*** WALL SUCCESS '+path+' -> '+count+' segs ***'); checkReady();
+}
+function onWallAllFail(){ logWarn('Wall template not found after all tries — using Box placeholders.'); pushDebugLog('*** WALL ALL FAIL - Box placeholders ***'); checkReady(); }
 
-tryLoad(wallPaths, (gltf, path)=>{
-  wallTemplate = gltf.scene || gltf.scenes[0];
-  wallTemplate.traverse(o=>{ if(o.isMesh){ o.castShadow=true; o.receiveShadow=true; }});
-  const count = replaceWallsWithTemplate();
-  logOk('Wall template auto-loaded: Wall.glb -> '+count+' segments replaced');
-  checkReady();
-}, ()=>{
-  logWarn('Wall template not found — using Box placeholders. Place at ./Assets/models/walls/Wall.glb');
-  checkReady();
-}, 'Wall template');
+function startAutoLoad(){
+  debugEntriesNova=[]; debugEntriesWall=[]; debugLogStore=[]; renderDebugLists(); if(debugDetailedEl) debugDetailedEl.textContent='Starting aggressive fallback load...\n'; pushDebugLog('=== START AUTO-LOAD '+new Date().toISOString()+' ==='); pushDebugLog('Location: '+location.href); pushDebugLog('UserAgent: '+navigator.userAgent);
+  loadGLBWithFallback(novaPaths, debugEntriesNova, onNovaSuccess, onNovaAllFail, 'Nova');
+  setTimeout(function(){ loadGLBWithFallback(wallPaths, debugEntriesWall, onWallSuccess, onWallAllFail, 'Wall'); }, 500);
+}
+startAutoLoad();
 
-let novaReady=false, wallChecked=false;
+var novaReady=false, wallChecked=false;
 function checkReady(){
   if(!novaReady && (novaModel || placeholderMesh)){ novaReady=true; }
-  if(wallTemplate || wallChecked){ /* */ }
-  wallChecked=true;
+  if(wallTemplate || wallChecked){ } wallChecked=true;
   if(novaReady && wallChecked){
-    setTimeout(()=>{
-      const l=document.getElementById('loader'); l.style.opacity='0'; setTimeout(()=>l.style.display='none',600);
-      logOk('AUTO-BOOT COMPLETE — Game ready');
-    }, 600);
+    setTimeout(function(){ var l=document.getElementById('loader'); if(l){ l.style.opacity='0'; setTimeout(function(){ l.style.display='none'; },600); } logOk('AUTO-BOOT COMPLETE — Game ready (bunny or Nova)'); }, 600);
   }
+  if(!novaLoaded){ setTimeout(function(){ if(!novaReady) checkReady(); }, 100); }
 }
-setTimeout(()=>{ if(!novaReady){ checkReady(); } }, 2800);
+setTimeout(function(){ if(!novaReady){ checkReady(); } }, 3200);
 
-// --- Controls (A/D turn, W/S fwd/back, Q/E strafe) ---
-const keys = {};
-let rotY = 0; // character yaw
-let camYawOffset = 0;
-let moveSpeed = 3.6;
-let crouched=false;
-let stealthEnergy=100, health=100, ammo=12, reserve=36;
-let isStealthHeld=false;
-let currentZone = missionZones[0];
-
-addEventListener('keydown', e=>{
+// CONTROLS
+var keys={}; var rotY=0; var moveSpeed=3.6; var crouched=false; var stealthEnergy=100, health=100, ammo=12, reserve=36; var isStealthHeld=false; var currentZone=missionZones[0];
+addEventListener('keydown', function(e){
   keys[e.code.toLowerCase()]=true;
-  if(e.key.toLowerCase()==='b'){ setBrightMode(!isBright); }
-  if(e.key.toLowerCase()==='l'){ document.getElementById('dev').classList.toggle('show'); }
-  if(e.key.toLowerCase()==='c'){ crouched=!crouched; log(crouched?'Crouch ON':'Crouch OFF','ok'); }
-  if(e.key.toLowerCase()==='f'){ doKnife(); }
-  if(e.key.toLowerCase()==='e'){ doHack(); }
+  var k=e.key.toLowerCase();
+  if(k==='b'){ setBrightMode(!isBright); }
+  if(k==='l'){ var dev=document.getElementById('dev'); if(dev) dev.classList.toggle('show'); }
+  if(k==='d'){ if(debugPanelEl.classList.contains('hidden')){ debugPanelEl.classList.remove('hidden'); debugToggleEl.classList.remove('show'); } else { debugPanelEl.classList.add('hidden'); debugToggleEl.classList.add('show'); } }
+  if(k==='c'){ crouched=!crouched; log(crouched?'Crouch ON':'Crouch OFF','ok'); }
+  if(k==='f'){ doKnife(); }
+  if(k==='e'){ doHack(); }
 });
-addEventListener('keyup', e=>{ keys[e.code.toLowerCase()]=false; if(e.key.toLowerCase()==='q') isStealthHeld=false; });
-
-let mouseDown=false, lastMX=0;
-canvas.addEventListener('pointerdown', e=>{ if(e.button===0){ mouseDown=true; lastMX=e.clientX; if(e.target===canvas) doShoot(); }});
-addEventListener('pointerup', ()=>mouseDown=false);
-canvas.addEventListener('pointermove', e=>{ if(mouseDown){ const dx=e.clientX-lastMX; lastMX=e.clientX; rotY -= dx*0.004; }});
-
+addEventListener('keyup', function(e){ keys[e.code.toLowerCase()]=false; if(e.key.toLowerCase()==='q') isStealthHeld=false; });
+var mouseDown=false, lastMX=0;
+canvas.addEventListener('pointerdown', function(e){ if(e.button===0){ mouseDown=true; lastMX=e.clientX; if(e.target===canvas) doShoot(); }});
+addEventListener('pointerup', function(){ mouseDown=false; });
+canvas.addEventListener('pointermove', function(e){ if(mouseDown){ var dx=e.clientX-lastMX; lastMX=e.clientX; rotY -= dx*0.004; }});
 function doShoot(){
-  if(ammo<=0){ logWarn('CLICK — Out of ammo (12/36)'); return; }
-  ammo--; document.getElementById('ammo').textContent=ammo+' / '+reserve+' • AUTO-RIFLE';
-  // muzzle flash
-  const flash = new THREE.PointLight(0xffaa44, 6, 4); flash.position.copy(charRoot.position).add(new THREE.Vector3(Math.sin(rotY)*0.6,1.2,Math.cos(rotY)*0.6)); scene.add(flash);
-  setTimeout(()=>scene.remove(flash),80);
-  // ray
-  const ray = new THREE.Raycaster(charRoot.position.clone().add(new THREE.Vector3(0,1.2,0)), new THREE.Vector3(Math.sin(rotY),0,Math.cos(rotY)).normalize());
-  const hits = ray.intersectObjects(wallGroup.children, true);
-  if(hits.length && hits[0].distance<18){ const p=hits[0].point; const spark=new THREE.Mesh(new THREE.SphereGeometry(0.06), new THREE.MeshBasicMaterial({color:0xffaa33})); spark.position.copy(p); scene.add(spark); setTimeout(()=>scene.remove(spark),120); }
-  if(ammo===0 && reserve>0){ setTimeout(()=>{ const reload=Math.min(12,reserve); reserve-=reload; ammo=reload; document.getElementById('ammo').textContent=ammo+' / '+reserve+' • AUTO-RIFLE'; logOk('Reloaded 12/36'); }, 900); }
+  if(ammo<=0){ logWarn('CLICK — Out of ammo (12/36)'); return; } ammo--; var ammoEl=document.getElementById('ammo'); if(ammoEl) ammoEl.textContent=ammo+' / '+reserve+' • AUTO-RIFLE';
+  var flash = new THREE.PointLight(0xffaa44, 6, 4); flash.position.copy(charRoot.position).add(new THREE.Vector3(Math.sin(rotY)*0.6,1.2,Math.cos(rotY)*0.6)); scene.add(flash); setTimeout(function(){ scene.remove(flash); },80);
+  var ray = new THREE.Raycaster(charRoot.position.clone().add(new THREE.Vector3(0,1.2,0)), new THREE.Vector3(Math.sin(rotY),0,Math.cos(rotY)).normalize());
+  var hits = ray.intersectObjects(wallGroup.children, true); if(hits.length && hits[0].distance<18){ var p=hits[0].point; var spark=new THREE.Mesh(new THREE.SphereGeometry(0.06), new THREE.MeshBasicMaterial({color:0xffaa33})); spark.position.copy(p); scene.add(spark); setTimeout(function(){ scene.remove(spark); },120); }
+  if(ammo===0 && reserve>0){ setTimeout(function(){ var reload=Math.min(12,reserve); reserve-=reload; ammo=reload; var a2=document.getElementById('ammo'); if(a2) a2.textContent=ammo+' / '+reserve+' • AUTO-RIFLE'; logOk('Reloaded 12/36'); }, 900); }
 }
-function doKnife(){ logOk('KNIFE // Silent takedown (F) — *shhk*'); const slash=new THREE.Mesh(new THREE.PlaneGeometry(1.2,0.2), new THREE.MeshBasicMaterial({color:0x8af8ff, transparent:true, opacity:0.8, side:THREE.DoubleSide})); slash.position.copy(charRoot.position).add(new THREE.Vector3(Math.sin(rotY)*0.8,1.1,Math.cos(rotY)*0.8)); slash.lookAt(charRoot.position); scene.add(slash); setTimeout(()=>scene.remove(slash),120); }
-function doHack(){
-  const near = missionZones.find(z=>charRoot.position.distanceTo(z.pos)<3.2);
-  if(near){ logOk('HACK // '+near.name+' — Access granted (E)'); document.getElementById('missionTitle').textContent='HACKED // '+near.name; }
-  else logWarn('No terminal in range — move to glowing cube + press E');
-}
-
-// Joystick + Fire
-const joyWrap=document.getElementById('joyWrap'); const joyKnob=document.getElementById('joyKnob'); const fireBtn=document.getElementById('fireBtn');
-let joyActive=false, joyVec={x:0,y:0};
-function joyPos(e){ const r=joyWrap.getBoundingClientRect(); const t=e.touches?e.touches[0]:e; return {x:t.clientX-r.left-r.width/2, y:t.clientY-r.top-r.height/2, rad:r.width/2}; }
-joyWrap.addEventListener('touchstart', e=>{ joyActive=true; e.preventDefault(); }, {passive:false});
-joyWrap.addEventListener('touchmove', e=>{ if(!joyActive) return; const p=joyPos(e); const m=Math.hypot(p.x,p.y); const lim=p.rad-18; let x=p.x,y=p.y; if(m>lim){ x=x/m*lim; y=y/m*lim; } joyKnob.style.transform='translate('+x+'px,'+y+'px)'; joyVec.x=x/lim; joyVec.y=y/lim; e.preventDefault(); }, {passive:false});
-addEventListener('touchend', ()=>{ joyActive=false; joyKnob.style.transform='translate(0,0)'; joyVec.x=0; joyVec.y=0; });
-joyWrap.addEventListener('pointerdown', e=>{ joyActive=true; (e.target).setPointerCapture(e.pointerId); });
-joyWrap.addEventListener('pointermove', e=>{ if(!joyActive) return; const r=joyWrap.getBoundingClientRect(); const x=e.clientX-r.left-r.width/2, y=e.clientY-r.top-r.height/2; const lim=r.width/2-18; const m=Math.hypot(x,y); let nx=x,ny=y; if(m>lim){ nx=x/m*lim; ny=y/m*lim; } joyKnob.style.transform='translate('+nx+'px,'+ny+'px)'; joyVec.x=nx/lim; joyVec.y=ny/lim; });
-joyWrap.addEventListener('pointerup', ()=>{ joyActive=false; joyKnob.style.transform='translate(0,0)'; joyVec.x=0; joyVec.y=0; });
-fireBtn.addEventListener('touchstart', e=>{ doShoot(); e.preventDefault(); }, {passive:false});
+function doKnife(){ logOk('KNIFE // Silent takedown (F) — *shhk*'); var slash=new THREE.Mesh(new THREE.PlaneGeometry(1.2,0.2), new THREE.MeshBasicMaterial({color:0x8af8ff, transparent:true, opacity:0.8, side:THREE.DoubleSide})); slash.position.copy(charRoot.position).add(new THREE.Vector3(Math.sin(rotY)*0.8,1.1,Math.cos(rotY)*0.8)); slash.lookAt(charRoot.position); scene.add(slash); setTimeout(function(){ scene.remove(slash); },120); }
+function doHack(){ var near=missionZones.find(function(z){ return charRoot.position.distanceTo(z.pos)<3.2; }); if(near){ logOk('HACK // '+near.name+' — Access granted (E)'); var mt=document.getElementById('missionTitle'); if(mt) mt.textContent='HACKED // '+near.name; } else logWarn('No terminal in range — move to glowing cube + press E'); }
+var joyWrap=document.getElementById('joyWrap'); var joyKnob=document.getElementById('joyKnob'); var fireBtn=document.getElementById('fireBtn'); var joyActive=false, joyVec={x:0,y:0};
+joyWrap.addEventListener('touchstart', function(e){ joyActive=true; e.preventDefault(); }, {passive:false});
+joyWrap.addEventListener('touchmove', function(e){ if(!joyActive) return; var r=joyWrap.getBoundingClientRect(); var t=e.touches?e.touches[0]:e; var x=t.clientX-r.left-r.width/2, y=t.clientY-r.top-r.height/2, rad=r.width/2; var m=Math.hypot(x,y); var lim=rad-18; var nx=x, ny=y; if(m>lim){ nx=x/m*lim; ny=y/m*lim; } joyKnob.style.transform='translate('+nx+'px,'+ny+'px)'; joyVec.x=nx/lim; joyVec.y=ny/lim; e.preventDefault(); }, {passive:false});
+addEventListener('touchend', function(){ joyActive=false; joyKnob.style.transform='translate(0,0)'; joyVec.x=0; joyVec.y=0; });
+joyWrap.addEventListener('pointerdown', function(e){ joyActive=true; e.target.setPointerCapture(e.pointerId); });
+joyWrap.addEventListener('pointermove', function(e){ if(!joyActive) return; var r=joyWrap.getBoundingClientRect(); var x=e.clientX-r.left-r.width/2, y=e.clientY-r.top-r.height/2; var lim=r.width/2-18; var m=Math.hypot(x,y); var nx=x, ny=y; if(m>lim){ nx=x/m*lim; ny=y/m*lim; } joyKnob.style.transform='translate('+nx+'px,'+ny+'px)'; joyVec.x=nx/lim; joyVec.y=ny/lim; });
+joyWrap.addEventListener('pointerup', function(){ joyActive=false; joyKnob.style.transform='translate(0,0)'; joyVec.x=0; joyVec.y=0; });
+fireBtn.addEventListener('touchstart', function(e){ doShoot(); e.preventDefault(); }, {passive:false});
 fireBtn.addEventListener('click', doShoot);
-
-// stealth Q hold
 function updateStealth(dt){
-  if(keys['keyq']){ isStealthHeld=true; stealthEnergy=Math.max(0,stealthEnergy-dt*18); }
-  else{ isStealthHeld=false; stealthEnergy=Math.min(100,stealthEnergy+dt*10); }
-  document.getElementById('stealthFill').style.width=stealthEnergy+'%';
-  document.getElementById('stealthTxt').textContent=Math.round(stealthEnergy);
-  if(novaModel){ novaModel.traverse(o=>{ if(o.isMesh && o.material){ o.material.transparent = stealthEnergy<90; o.material.opacity = isStealthHeld ? 0.35+stealthEnergy/200 : 1; } }); }
+  if(keys['keyq']){ isStealthHeld=true; stealthEnergy=Math.max(0,stealthEnergy-dt*18); } else { isStealthHeld=false; stealthEnergy=Math.min(100,stealthEnergy+dt*10); }
+  var sf=document.getElementById('stealthFill'); if(sf) sf.style.width=stealthEnergy+'%'; var st=document.getElementById('stealthTxt'); if(st) st.textContent=Math.round(stealthEnergy);
+  if(novaModel){ novaModel.traverse(function(o){ if(o.isMesh && o.material){ o.material.transparent = stealthEnergy<90; o.material.opacity = isStealthHeld ? 0.35+stealthEnergy/200 : 1; } }); }
 }
-
-const clock=new THREE.Clock();
-let lastZoneCheck=0;
-function animate(){
-  requestAnimationFrame(animate);
-  const dt=Math.min(clock.getDelta(),0.05);
-  if(mixer) mixer.update(dt);
-
-  // A/D turn left/right (A left D right)
-  if(keys['keya']) rotY += dt*1.8;
-  if(keys['keyd']) rotY -= dt*1.8;
-  // joystick also turns
-  if(Math.abs(joyVec.x)>0.15) rotY -= joyVec.x*dt*2.2;
-
-  // movement W/S fwd/back, Q/E strafe
-  const fwd = new THREE.Vector3(Math.sin(rotY),0,Math.cos(rotY));
-  const right = new THREE.Vector3(Math.cos(rotY),0,-Math.sin(rotY));
-  let mv = new THREE.Vector3();
-  if(keys['keyw']) mv.add(fwd);
-  if(keys['keys']) mv.sub(fwd);
-  if(keys['keye']) mv.add(right);
-  // Q is stealth when held, but also strafe? spec says Q/E strafe, but Q hold stealth - we use Q as stealth, E as strafe right, and keep A/D for turn not strafe per spec. For compatibility, Q/E strafe when not held long? We'll make E strafe right, Q strafe left tap + hold stealth.
-  if(keys['keyq'] && !isStealthHeld) { /* first frame strafe left, then stealth */ }
-  // Actually map: Q/E strafe - so Q left strafe, E right strafe, but Q also initiates stealth hold
-  if(keys['keyq']) mv.sub(right.clone().multiplyScalar(0.6));
-  if(keys['keye']) mv.add(right);
-
-  // joystick y = fwd/back
-  if(Math.abs(joyVec.y)>0.12){ mv.add(fwd.clone().multiplyScalar(-joyVec.y)); }
-
-  if(mv.length()>0){ mv.normalize().multiplyScalar(dt*(crouched?1.6:moveSpeed)*(isStealthHeld?0.55:1)); charRoot.position.add(mv); }
-
-  // collision simple: keep inside bounds, push out of walls (AABB)
-  // (light collision - check distance to wall boxes)
-  placeholderWalls.forEach(w=>{
-    const d = charRoot.position.clone(); const seg=w.userData; if(!seg) return;
-    // closest point on segment
-    const ap = new THREE.Vector3().subVectors(d, seg.a); const ab = new THREE.Vector3().subVectors(seg.b, seg.a);
-    const t = Math.max(0, Math.min(1, ap.dot(ab)/ab.lengthSq())); const closest = seg.a.clone().add(ab.multiplyScalar(t));
-    const dist = new THREE.Vector3(d.x,0,d.z).distanceTo(new THREE.Vector3(closest.x,0,closest.z));
-    if(dist<0.7){ const push = new THREE.Vector3(d.x-closest.x,0,d.z-closest.z).normalize().multiplyScalar(0.7-dist); charRoot.position.add(push); }
-  });
-
-  // char yaw
+var clock=new THREE.Clock(); var lastZoneCheck=0;
+function animate(){ requestAnimationFrame(animate); var dt=Math.min(clock.getDelta(),0.05); if(mixer) mixer.update(dt); if(keys['keya']) rotY += dt*1.8; if(keys['keyd']) rotY -= dt*1.8; if(Math.abs(joyVec.x)>0.15) rotY -= joyVec.x*dt*2.2; var fwd = new THREE.Vector3(Math.sin(rotY),0,Math.cos(rotY)); var right = new THREE.Vector3(Math.cos(rotY),0,-Math.sin(rotY)); var mv = new THREE.Vector3(); if(keys['keyw']) mv.add(fwd); if(keys['keys']) mv.sub(fwd); if(keys['keye']) mv.add(right); if(keys['keyq']) mv.sub(right.clone().multiplyScalar(0.6)); if(keys['keye']) mv.add(right); if(Math.abs(joyVec.y)>0.12){ mv.add(fwd.clone().multiplyScalar(-joyVec.y)); } if(mv.length()>0){ mv.normalize().multiplyScalar(dt*(crouched?1.6:moveSpeed)*(isStealthHeld?0.55:1)); charRoot.position.add(mv); }
+  placeholderWalls.forEach(function(w){ var d = charRoot.position.clone(); var seg=w.userData; if(!seg) return; var ap = new THREE.Vector3().subVectors(d, seg.a); var ab = new THREE.Vector3().subVectors(seg.b, seg.a); var t = Math.max(0, Math.min(1, ap.dot(ab)/ab.lengthSq())); var closest = seg.a.clone().add(ab.clone().multiplyScalar(t)); var dist = new THREE.Vector3(d.x,0,d.z).distanceTo(new THREE.Vector3(closest.x,0,closest.z)); if(dist<0.7){ var push = new THREE.Vector3(d.x-closest.x,0,d.z-closest.z).normalize().multiplyScalar(0.7-dist); charRoot.position.add(push); } });
   charRoot.rotation.y = rotY;
-
-  // camera follow - close 2.0 back 1.35 up 6.5 fwd FOV 62
-  const camTarget = charRoot.position.clone().add(new THREE.Vector3(0,crouched?0.8:1.35,0));
-  const backDir = new THREE.Vector3(-Math.sin(rotY),0,-Math.cos(rotY));
-  const camPos = camTarget.clone().add(backDir.multiplyScalar(camBack)).add(new THREE.Vector3(0,camUp,0)).add(fwd.clone().multiplyScalar(camFwd));
-  // lerp
-  camera.position.lerp(camPos, 0.12);
-  camera.lookAt(camTarget);
-
-  updateStealth(dt);
-
-  // mission zone update
-  lastZoneCheck+=dt;
-  if(lastZoneCheck>0.3){
-    lastZoneCheck=0;
-    let best=null, bd=Infinity;
-    missionZones.forEach(z=>{ const d=charRoot.position.distanceTo(z.pos); if(d<bd){ bd=d; best=z; }});
-    if(best && best!==currentZone && bd<best.radius+2){ currentZone=best; document.getElementById('missionLoc').textContent=best.name; document.getElementById('missionDesc').textContent=best.desc; }
-  }
-
-  // minimap
-  drawMini();
-
-  renderer.render(scene, camera);
+  var camTarget = charRoot.position.clone().add(new THREE.Vector3(0,crouched?0.8:1.35,0)); var backDir = new THREE.Vector3(-Math.sin(rotY),0,-Math.cos(rotY)); var camPos = camTarget.clone().add(backDir.multiplyScalar(camBack)).add(new THREE.Vector3(0,camUp,0)).add(fwd.clone().multiplyScalar(camFwd)); camera.position.lerp(camPos, 0.12); camera.lookAt(camTarget);
+  updateStealth(dt); lastZoneCheck+=dt; if(lastZoneCheck>0.3){ lastZoneCheck=0; var best=null, bd=Infinity; missionZones.forEach(function(z){ var d=charRoot.position.distanceTo(z.pos); if(d<bd){ bd=d; best=z; }}); if(best && best!==currentZone && bd<best.radius+2){ currentZone=best; var ml=document.getElementById('missionLoc'); if(ml) ml.textContent=best.name; var md=document.getElementById('missionDesc'); if(md) md.textContent=best.desc; } }
+  drawMini(); renderer.render(scene, camera);
 }
 animate();
+function drawMini(){ var c=document.getElementById('mini'); var ctx=c.getContext('2d'); if(!ctx) return; ctx.clearRect(0,0,148,148); ctx.fillStyle='rgba(10,14,20,0.92)'; ctx.fillRect(0,0,148,148); ctx.strokeStyle='rgba(255,255,255,0.06)'; ctx.lineWidth=1; for(var i=0;i<=7;i++){ ctx.beginPath(); ctx.moveTo(i*148/7,0); ctx.lineTo(i*148/7,148); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0,i*148/7); ctx.lineTo(148,i*148/7); ctx.stroke(); } function w2m(v){ return {x: (v.x+28)/56*148, y: (14 - v.z)/60*148}; } ctx.strokeStyle='rgba(138,248,255,0.22)'; ctx.lineWidth=1.5; (placeholderWalls.length?placeholderWalls.map(function(w){ return w.userData; }):[]).forEach(function(s){ if(!s) return; var a=w2m(s.a), b=w2m(s.b); ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); }); missionZones.forEach(function(z){ var p=w2m(z.pos); ctx.fillStyle= z===currentZone ? 'rgba(255,235,138,0.9)' : 'rgba(255,255,255,0.25)'; ctx.beginPath(); ctx.arc(p.x,p.y, z===currentZone?3.5:2,0,Math.PI*2); ctx.fill(); }); var pp=w2m(charRoot.position); ctx.fillStyle='#8af8ff'; ctx.beginPath(); ctx.arc(pp.x,pp.y,3.5,0,Math.PI*2); ctx.fill(); ctx.strokeStyle='#8af8ff'; ctx.beginPath(); ctx.moveTo(pp.x,pp.y); ctx.lineTo(pp.x+Math.sin(rotY)*8, pp.y+Math.cos(rotY)*8*-1); ctx.stroke(); }
 
-function drawMini(){
-  const c=document.getElementById('mini'); const ctx=c.getContext('2d'); if(!ctx) return;
-  ctx.clearRect(0,0,148,148);
-  ctx.fillStyle='rgba(10,14,20,0.92)'; ctx.fillRect(0,0,148,148);
-  // grid
-  ctx.strokeStyle='rgba(255,255,255,0.06)'; ctx.lineWidth=1;
-  for(let i=0;i<=7;i++){ ctx.beginPath(); ctx.moveTo(i*148/7,0); ctx.lineTo(i*148/7,148); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0,i*148/7); ctx.lineTo(148,i*148/7); ctx.stroke(); }
-  // world to mini: world x: -25..25 -> 0..148, z: 14..-46 -> 0..148
-  function w2m(v){ return {x: (v.x+28)/56*148, y: (14 - v.z)/60*148}; }
-  // walls
-  ctx.strokeStyle='rgba(138,248,255,0.22)'; ctx.lineWidth=1.5;
-  (placeholderWalls.length?placeholderWalls.map(w=>w.userData):[]).forEach(s=>{ if(!s) return; const a=w2m(s.a), b=w2m(s.b); ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); });
-  // zones
-  missionZones.forEach(z=>{ const p=w2m(z.pos); ctx.fillStyle= z===currentZone ? 'rgba(255,235,138,0.9)' : 'rgba(255,255,255,0.25)'; ctx.beginPath(); ctx.arc(p.x,p.y, z===currentZone?3.5:2,0,Math.PI*2); ctx.fill(); });
-  // player
-  const pp=w2m(charRoot.position); ctx.fillStyle='#8af8ff'; ctx.beginPath(); ctx.arc(pp.x,pp.y,3.5,0,Math.PI*2); ctx.fill();
-  ctx.strokeStyle='#8af8ff'; ctx.beginPath(); ctx.moveTo(pp.x,pp.y); ctx.lineTo(pp.x+Math.sin(rotY)*8, pp.y+Math.cos(rotY)*8*-1); ctx.stroke();
-}
+// debug actions
+var copyBtn=document.getElementById('copyDebugBtn'); if(copyBtn){ copyBtn.addEventListener('click', function(){ var txt=debugLogStore.join('\n')+'\n\nLocation: '+location.href+'\nPaths tried:\n'+novaPaths.join('\n')+'\n'+wallPaths.join('\n'); if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(function(){ copyBtn.textContent='COPIED ✓ PASTE TO DEV'; setTimeout(function(){ copyBtn.textContent='COPY DEBUG LOG'; },2000); }); } else { var ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); copyBtn.textContent='COPIED ✓'; setTimeout(function(){ copyBtn.textContent='COPY DEBUG LOG'; },2000); } }); }
+var hideBtn=document.getElementById('hideDebugBtn'); if(hideBtn){ hideBtn.addEventListener('click', function(){ debugPanelEl.classList.add('hidden'); debugToggleEl.classList.add('show'); }); }
+var retryBtn=document.getElementById('retryBtn'); if(retryBtn){ retryBtn.addEventListener('click', function(){ startAutoLoad(); }); }
+if(debugToggleEl){ debugToggleEl.addEventListener('click', function(){ debugPanelEl.classList.remove('hidden'); debugToggleEl.classList.remove('show'); }); }
 
-// dev file inputs
-document.getElementById('novaFile')?.addEventListener('change', e=>{
-  const f=e.target.files[0]; if(!f) return; const url=URL.createObjectURL(f);
-  loader.load(url, gltf=>{
-    const model=gltf.scene; model.traverse(o=>{ if(o.isMesh) o.castShadow=true; });
-    if(placeholderMesh) charRoot.remove(placeholderMesh);
-    if(novaModel) charRoot.remove(novaModel);
-    novaModel=model; charRoot.add(model); logOk('DEV Nova loaded from file input');
-  });
-});
-document.getElementById('wallFile')?.addEventListener('change', e=>{
-  const f=e.target.files[0]; if(!f) return; const url=URL.createObjectURL(f);
-  loader.load(url, gltf=>{
-    wallTemplate=gltf.scene; const c=replaceWallsWithTemplate(); logOk('DEV Wall template -> '+c+' segs');
-  });
-});
-document.getElementById('devClose').onclick=()=>document.getElementById('dev').classList.remove('show');
+// manual file pickers
+function handleManualNovaFile(file){ if(!file) return; var url=URL.createObjectURL(file); logOk('MANUAL Nova file: '+file.name+' '+(file.size/1024/1024).toFixed(2)+'MB'); pushDebugLog('MANUAL PICK nova.glb '+file.name+' '+(file.size/1024/1024).toFixed(2)+'MB'); loader.load(url, function(gltf){ onNovaSuccess(gltf, 'manual:'+file.name); debugPanelEl.classList.add('hidden'); debugToggleEl.classList.add('show'); }, undefined, function(err){ logErr('Manual Nova load FAIL: '+(err.message||'error')); pushDebugLog('Manual Nova FAIL '+(err.message||'error')); }); }
+function handleManualWallFile(file){ if(!file) return; var url=URL.createObjectURL(file); logOk('MANUAL Wall file: '+file.name); pushDebugLog('MANUAL PICK wall '+file.name); loader.load(url, function(gltf){ onWallSuccess(gltf, 'manual:'+file.name); }, undefined, function(err){ logErr('Manual Wall FAIL '+(err.message||'error')); }); }
+var manualNovaBtn=document.getElementById('manualNovaBtn'); if(manualNovaBtn){ manualNovaBtn.addEventListener('click', function(){ var inp=document.createElement('input'); inp.type='file'; inp.accept='.glb,.gltf'; inp.onchange=function(e){ var f=e.target.files[0]; handleManualNovaFile(f); }; inp.click(); }); }
+var manualWallBtn=document.getElementById('manualWallBtn'); if(manualWallBtn){ manualWallBtn.addEventListener('click', function(){ var inp=document.createElement('input'); inp.type='file'; inp.accept='.glb,.gltf'; inp.onchange=function(e){ var f=e.target.files[0]; handleManualWallFile(f); }; inp.click(); }); }
 
-addEventListener('resize', ()=>{
-  renderer.setSize(innerWidth, innerHeight);
-  camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix();
-});
-
-log('Controls: A/D turn left/right, W/S fwd/back, Q/E strafe — Camera close 2.0 back 1.35 up 6.5 fwd FOV 62','ok');
+// legacy dev inputs
+var novaFileInput=document.getElementById('novaFile'); if(novaFileInput){ novaFileInput.addEventListener('change', function(e){ var f=e.target.files[0]; if(!f) return; handleManualNovaFile(f); }); }
+var wallFileInput=document.getElementById('wallFile'); if(wallFileInput){ wallFileInput.addEventListener('change', function(e){ var f=e.target.files[0]; if(!f) return; handleManualWallFile(f); }); }
+var devClose=document.getElementById('devClose'); if(devClose){ devClose.onclick=function(){ var dev=document.getElementById('dev'); if(dev) dev.classList.remove('show'); }; }
+addEventListener('resize', function(){ renderer.setSize(innerWidth, innerHeight); camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); });
+log('Controls: A/D turn left/right, W/S fwd/back, Q/E strafe — Camera close 2.0 back 1.35 up 6.5 fwd FOV 62 — DEBUG OVERLAY ACTIVE','ok');
 </script>
 </body>
 </html>
