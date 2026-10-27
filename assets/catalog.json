@@ -1,0 +1,11 @@
+{
+  "version":1,
+  "characters":{
+    "nova":{"url":"./assets/models/nova.glb","height":1.82,"rotationY":0,"animations":{"idle":"Idle","walk":"Walk","run":"run","crouchIdle":"Crouch_Idle","crouchWalk":"crouch_walk"}},
+    "human":null,"vyraen":null,"kharuun":null,"keshar":null
+  },
+  "props":{
+    "bulkhead":{"url":"./assets/models/walls/wall.glb","width":4,"height":3.8},
+    "crate":null,"console":null,"cooler":null,"ship":null
+  }
+}

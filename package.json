@@ -1,0 +1,12 @@
+{
+  "name": "blackglass-frontier-rpg",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A Rapscallion Story \u2014 standalone GitHub Pages space RPG",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "check": "node --check src/main.js && node --check src/game.js && node --check src/world.js && node --check src/actors.js && node --check src/state.js && node --check src/ui.js && node --check src/content.js",
+    "build": "node scripts/build.mjs"
+  }
+}
