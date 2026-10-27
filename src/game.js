@@ -1,10 +1,10 @@
 import * as T from '../vendor/three.module.js';
-import { AssetBank, makeHumanoid } from './actors.js';
-import { World } from './world.js';
-import { UI } from './ui.js';
-import { AudioEngine } from './audio.js';
-import { ZONES, CONTRACTS, WEAPONS, DOSSIERS, BUILD } from './content.js';
-import { freshState, loadState, saveState, sanitizeSave, maxHealth, acceptContract, recoverObjective, collectCell, extractContract, deliverContract, buyGear, buyPerk, restock, addXP } from './state.js';
+import { AssetBank, makeHumanoid } from './actors.js?v=2';
+import { World } from './world.js?v=2';
+import { UI } from './ui.js?v=2';
+import { AudioEngine } from './audio.js?v=2';
+import { ZONES, CONTRACTS, WEAPONS, DOSSIERS, BUILD } from './content.js?v=2';
+import { freshState, loadState, saveState, sanitizeSave, maxHealth, acceptContract, recoverObjective, collectCell, extractContract, deliverContract, buyGear, buyPerk, restock, addXP } from './state.js?v=2';
 const $=id=>document.getElementById(id);
 const V=new T.Vector3(),V2=new T.Vector3(),V3=new T.Vector3();
 const lerpAngle=(a,b,t)=>a+Math.atan2(Math.sin(b-a),Math.cos(b-a))*t;
@@ -44,11 +44,11 @@ export class Game{
   start(){this.audio.init();this.state.started=true;this.loadZone(this.state.zone,true);this.ui.close();if(this.state.health<=0)this.ui.dead();this.ui.say('NOVA','All right. Let’s find something that pays more than the repair bill.');this.save();}
   newGame(){this.state=freshState();this.state.started=true;this.audio.init();this.loadZone('ship');this.ui.close();this.ui.say('ILYRA','Captain. A freight insurer has work. The contract is on the navigation table ahead.',8);this.save();}
   loadZone(zone,resume=false){
-    const saved=resume?this.state.position:null,spawn=this.world.build(zone,this.state);this.state.zone=zone;this.player.position.set(saved?.x??spawn.x,0,saved?.z??spawn.z);if(!this.world.onFloor(this.player.position.x,this.player.position.z,.2)||this.world.blocked(this.player.position.x,this.player.position.z,.22))this.player.position.set(spawn.x,0,spawn.z);this.yaw=resume?this.state.yaw:spawn.yaw;this.pitch=.27;this.actor.root.rotation.y=this.yaw+Math.PI;this.cloaked=false;document.body.classList.remove('cloaked');this.actor.setCloak?.(false);this.reloading=0;this.healing=0;this.sprinting=false;this.resetInput();this.cameraInitialized=false;
+    const saved=resume?this.state.position:null,spawn=this.world.build(zone,this.state);this.state.zone=zone;this.player.position.set(saved?.x??spawn.x,0,saved?.z??spawn.z);if(!this.world.onFloor(this.player.position.x,this.player.position.z,.2)||this.world.blocked(this.player.position.x,this.player.position.z,.35))this.player.position.set(spawn.x,0,spawn.z);this.yaw=resume?this.state.yaw:spawn.yaw;this.pitch=.27;this.actor.root.rotation.y=this.yaw+Math.PI;this.cloaked=false;document.body.classList.remove('cloaked');this.actor.setCloak?.(false);this.actor.setViewFade?.(1);this.reloading=0;this.healing=0;this.sprinting=false;this.resetInput();this.cameraInitialized=false;
     if(this.state.gear.includes('bypass')&&zone==='ufd')this.world.openGate();
   }
   async travel(zone){if(this.travelling||!ZONES[zone])return;const active=CONTRACTS[this.state.active];if(!['ship','port'].includes(zone)&&active?.zone!==zone){this.ui.toast('Take a contract for that destination first.');return;}this.travelling=true;this.resetInput();this.ui.menu.hidden=true;this.ui.panel='travel';$('hud').hidden=true;$('travelName').textContent=ZONES[zone].name;$('transition').hidden=false;this.audio.tone(60,1.8,'sine',.4,250);await new Promise(r=>setTimeout(r,1450));this.loadZone(zone);this.travelling=false;this.ui.close();$('transition').hidden=true;this.save();
-    if(zone==='ufd')this.ui.say('ILYRA','Security checkpoint ahead. The archive is past cooling, beside the core. Maintenance runs along the east side.',8);
+    if(zone==='ufd')this.ui.say('ILYRA','Main checkpoint ahead. The inspection office on your left has a staff passage behind security. The east maintenance bypass needs a transponder.',8);
     if(zone==='kharuun'){this.unlock('kharuun');this.ui.say('NOVA','One stolen regulator. One freezing settlement. Let’s try not to make this philosophical.');}
     if(zone==='wreck')this.ui.say('NOVA','Three power cells, no survivors to argue salvage rights. That’s almost a holiday.');
   }
@@ -95,11 +95,11 @@ export class Game{
   damage(n){if(this.state.health<=0)return;this.state.health=Math.max(0,this.state.health-n);this.audio.hurt();document.body.classList.add('damaged');clearTimeout(this.damageTimer);this.damageTimer=setTimeout(()=>document.body.classList.remove('damaged'),180);if(this.state.health<=0){this.save();this.ui.dead();}}
   enemyAI(dt){
     const playerEye=this.player.position.clone().setY(this.crouched?.8:1.3);
-    for(const e of this.world.enemies){if(e.dead)continue;const pos=e.actor.root.position,dist=pos.distanceTo(this.player.position),eye=pos.clone().setY(e.type==='drone'?1.45:1.5);const direction=V.copy(this.player.position).sub(pos);const forward=new T.Vector3(Math.sin(e.actor.root.rotation.y),0,Math.cos(e.actor.root.rotation.y));const front=dist<4||forward.dot(direction.normalize())>.2;const range=(this.crouched?10:18)*(1-this.state.perks.stealth*.12);const visible=dist<(this.cloaked?2.1:range)&&front&&!this.world.lineBlocked(eye,playerEye);
+    for(const e of this.world.enemies){if(e.dead)continue;const pos=e.actor.root.position,dist=pos.distanceTo(this.player.position),eye=pos.clone().setY(e.type==='drone'?1.45:1.5);const direction=V.copy(this.player.position).sub(pos);const forward=new T.Vector3(Math.sin(e.actor.root.rotation.y),0,Math.cos(e.actor.root.rotation.y));const front=dist<4||forward.dot(direction.normalize())>.2;const range=(this.crouched?10:18)*(1-this.state.perks.stealth*.12);const visible=dist<(this.cloaked?2.1:range)&&front&&!this.world.lineBlocked(eye,playerEye,0,true);
       if(visible){e.alert=Math.min(1,e.alert+dt*(this.crouched?.8:1.6));e.lastSeen=this.player.position.clone();e.searchTime=7;}else e.alert=Math.max(0,e.alert-dt*.12);
       e.cooldown-=dt;e.searchTime-=dt;let moving=false;
       if(e.alert>.5&&e.lastSeen&&e.searchTime>0){const dx=e.lastSeen.x-pos.x,dz=e.lastSeen.z-pos.z,d=Math.hypot(dx,dz);e.actor.root.rotation.y=lerpAngle(e.actor.root.rotation.y,Math.atan2(dx,dz),Math.min(1,dt*5));if(d>7){this.world.move(pos,dx/d*dt*(e.type==='heavy'?1.25:2),dz/d*dt*(e.type==='heavy'?1.25:2),.4);moving=true;}
-        if(visible&&e.alert>.78&&e.cooldown<=0&&dist<23){e.cooldown=e.type==='drone'?.95:e.type==='heavy'?1.3:1.4;this.tracer(eye,playerEye,0xee8d75,.12);this.audio.tone(90,.1,'sawtooth',.12,40);this.damage(e.type==='heavy'?12:e.type==='kharuun'?8:6);}
+        if(visible&&e.alert>.78&&e.cooldown<=0&&dist<23&&!this.world.lineBlocked(eye,playerEye)){e.cooldown=e.type==='drone'?.95:e.type==='heavy'?1.3:1.4;this.tracer(eye,playerEye,0xee8d75,.12);this.audio.tone(90,.1,'sawtooth',.12,40);this.damage(e.type==='heavy'?12:e.type==='kharuun'?8:6);}
       }else if(e.patrol.length){const p=e.patrol[e.point],dx=p.x-pos.x,dz=p.z-pos.z,d=Math.hypot(dx,dz);if(d<.5)e.point=(e.point+1)%e.patrol.length;else{this.world.move(pos,dx/d*dt*.9,dz/d*dt*.9,.35);e.actor.root.rotation.y=lerpAngle(e.actor.root.rotation.y,Math.atan2(dx,dz),Math.min(1,dt*3));moving=true;}}
       e.actor.update(dt,this.time+e.phase,moving,'walk');
     }
@@ -117,8 +117,8 @@ export class Game{
     const c=s.contracts[s.active];if(c?.status==='active'&&c.stage===0&&((s.active==='audit'&&this.player.position.z< -24)||(s.active==='regulator'&&this.player.position.z< -23))){c.stage=1;this.save();}
     this.shotCooldown=Math.max(0,this.shotCooldown-dt);if(this.fireHeld)this.shoot();
   }
-  updateCamera(dt){const p=this.player.position,forward=V.set(-Math.sin(this.yaw),0,-Math.cos(this.yaw)),right=V2.set(Math.cos(this.yaw),0,-Math.sin(this.yaw));const pivot=p.clone().setY(this.crouched?1.05:1.45),distance=this.aiming?3.1:5.2;const desired=pivot.clone().addScaledVector(forward,-distance).addScaledVector(right,this.aiming?.65:.5);desired.y+=this.pitch*distance;const limit=this.world.cameraLimit(pivot,desired);desired.lerpVectors(pivot,desired,limit);if(!this.cameraInitialized){this.camera.position.copy(desired);this.cameraInitialized=true;}else this.camera.position.lerp(desired,1-Math.exp(-dt*12));const look=pivot.clone().addScaledVector(forward,8);look.y-=this.pitch*2;this.camera.lookAt(look);}
-  frame(){const dt=Math.min(this.clock.getDelta(),.05);this.time+=dt;this.audio.update(dt,this.state.zone);if(!this.travelling){this.world.update(dt,this.time);if(!this.ui.panel&&this.state.started&&this.state.health>0){this.state.playTime+=dt;this.updatePlayer(dt);this.enemyAI(dt);this.updateCamera(dt);this.saveTimer+=dt;if(this.saveTimer>6){this.saveTimer=0;this.save();}}else{this.actor.update(dt,this.time,false,'walk',this.yaw,this.state.weapon);if(this.ui.panel==='title'){this.camera.position.set(5+Math.sin(this.time*.12)*.5,2.6,-23);this.camera.lookAt(-.5,1.15,-17);}}}
+  updateCamera(dt){const p=this.player.position,forward=V.set(-Math.sin(this.yaw),0,-Math.cos(this.yaw)),right=V2.set(Math.cos(this.yaw),0,-Math.sin(this.yaw));const pivot=p.clone().setY(this.crouched?1.05:1.45),distance=this.aiming?3.1:5.2;const desired=pivot.clone().addScaledVector(forward,-distance).addScaledVector(right,this.aiming?.65:.5);desired.y+=this.pitch*distance;const limit=this.world.cameraLimit(pivot,desired);desired.lerpVectors(pivot,desired,limit);if(!this.cameraInitialized){this.camera.position.copy(desired);this.cameraInitialized=true;}else this.camera.position.lerp(desired,1-Math.exp(-dt*12));const safe=this.world.cameraLimit(pivot,this.camera.position);if(safe<.96)this.camera.position.lerpVectors(pivot,this.camera.position,safe);this.actor.setViewFade?.(this.camera.position.distanceTo(pivot)<.85?.12:1);const look=pivot.clone().addScaledVector(forward,8);look.y-=this.pitch*2;this.camera.lookAt(look);}
+  frame(){const dt=Math.min(this.clock.getDelta(),.05);this.time+=dt;this.audio.update(dt,this.state.zone);if(!this.travelling){this.world.update(dt,this.time,this.player.position);if(!this.ui.panel&&this.state.started&&this.state.health>0){this.state.playTime+=dt;this.updatePlayer(dt);this.enemyAI(dt);this.updateCamera(dt);this.saveTimer+=dt;if(this.saveTimer>6){this.saveTimer=0;this.save();}}else{this.actor.update(dt,this.time,false,'walk',this.yaw,this.state.weapon);if(this.ui.panel==='title'){this.camera.position.set(5+Math.sin(this.time*.12)*.5,2.6,-23);this.camera.lookAt(-.5,1.15,-17);}}}
     if(this.time>this.flashUntil)this.flash.intensity=0;for(let i=this.effects.length-1;i>=0;i--){const e=this.effects[i];e.life-=dt;e.mesh.material.opacity=Math.max(0,e.life/e.max);if(e.life<=0){this.scene.remove(e.mesh);e.mesh.geometry.dispose();e.mesh.material.dispose();this.effects.splice(i,1);}}
     this.uiTimer+=dt;if(this.uiTimer>.09){this.uiTimer=0;this.ui.update(this.time);}this.sun.position.set(this.player.position.x-30,55,this.player.position.z+25);this.sun.target.position.copy(this.player.position);this.renderer.render(this.scene,this.camera);
   }

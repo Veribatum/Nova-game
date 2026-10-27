@@ -1,4 +1,4 @@
-import {Game} from './game.js';
+import {Game} from './game.js?v=2';
 const game=new Game();
 window.addEventListener('error',e=>{game.issues.push(e.message);console.error('BLACKGLASS:',e.message);});
 window.addEventListener('unhandledrejection',e=>{game.issues.push(String(e.reason?.message||e.reason));});

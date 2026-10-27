@@ -1,4 +1,4 @@
-import { CONTRACTS, GEAR, WEAPONS, DOSSIERS } from './content.js';
+import { CONTRACTS, GEAR, WEAPONS, DOSSIERS } from './content.js?v=2';
 export const SAVE_KEY='blackglass.frontier.save.v1';
 export function freshState(){return {version:1,started:false,zone:'ship',position:null,yaw:0,credits:350,level:1,xp:0,points:0,health:100,energy:100,medkits:3,weapon:'pistol',ammo:{pistol:12,rifle:24},reserve:{pistol:72,rifle:120},gear:[],perks:{combat:0,stealth:0,tech:0},active:null,contracts:{},salvageRuns:0,reputation:{frontier:0,ufd:0,kharuun:0},dossiers:['captain','rapscallion'],collected:[],defeated:[],settings:{sound:true,sensitivity:1,quality:'auto'},playTime:0};}
 export function maxHealth(s){return 100+(s.gear.includes('armor')?25:0);}

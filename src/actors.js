@@ -74,11 +74,13 @@ export class AssetBank{
     model.rotation.y+=entry.rotationY||0;
     const weapon=makeWeapon(),rifle=makeWeapon(true);root.add(weapon,rifle);rifle.visible=false;
     const hand=model.getObjectByName('mixamorigRightHand')||model.getObjectByName('mixamorig:RightHand')||model.getObjectByName('RightHand');
-    const tmp=new T.Vector3();let cloak=false;
-    const mats=[];model.traverse(o=>{if(o.isMesh){o.material=Array.isArray(o.material)?o.material.map(m=>m.clone()):o.material.clone();for(const m of [o.material].flat()){mats.push({m,opacity:m.opacity,transparent:m.transparent});}}});
+    const tmp=new T.Vector3();let cloak=false,viewFade=1;
+    const mats=[];model.traverse(o=>{if(o.isMesh){o.material=Array.isArray(o.material)?o.material.map(m=>m.clone()):o.material.clone();for(const m of [o.material].flat()){mats.push({m,opacity:m.opacity,transparent:m.transparent,depthWrite:m.depthWrite});}}});
+    const applyOpacity=()=>{for(const x of mats){const transparent=x.transparent||cloak||viewFade<.99;if(x.m.transparent!==transparent){x.m.transparent=transparent;x.m.needsUpdate=true;}x.m.opacity=x.opacity*(cloak?.24:1)*viewFade;x.m.depthWrite=x.depthWrite&&!cloak&&viewFade>.99;}};
     return {root,model,mixer,actions,height,procedural:false,current,hand,weapon,rifle,
       dispose(){mixer.stopAllAction();mixer.uncacheRoot(model);for(const x of mats)x.m.dispose();model.traverse(o=>{if(o.isSkinnedMesh)o.skeleton.dispose();});},
-      setCloak(on){if(cloak===on)return;cloak=on;for(const x of mats){x.m.transparent=on||x.transparent;x.m.opacity=on?.24:x.opacity;x.m.depthWrite=!on;x.m.needsUpdate=true;}},
+      setCloak(on){if(cloak===on)return;cloak=on;applyOpacity();},
+      setViewFade(value){if(Math.abs(value-viewFade)<.01)return;viewFade=value;applyOpacity();},
       update(dt,time,moving,mode='walk',yaw=0,weaponId='pistol'){
         const desired=moving?(mode==='crouch'?'crouchWalk':mode==='run'?'run':'walk'):(mode==='crouch'?'crouchIdle':'idle');
         if(desired!==current&&actions[desired]){const next=actions[desired];next.reset().setEffectiveTimeScale(1).setEffectiveWeight(1).play();actions[current]?.fadeOut(.18);next.fadeIn(.18);current=desired;this.current=desired;}

@@ -6,6 +6,12 @@ A standalone third-person space RPG built in `Veribatum/Nova-game` from the BLAC
 
 The opening build has five explorable areas: Rapscallion's crew deck and bridge, Wayfarer Anchorage, the UFD Kestrel Logistics installation, the Kharuun Ember Reach refinery, and the Peregrine survey wreck. Two main contracts and a repeatable salvage claim connect exploration, ground combat, evidence recovery, payment, gear, abilities, and reputation.
 
+## Enclosed level rebuild · 0.2.0
+
+Kestrel Logistics now uses fifteen fitted rooms, continuous ceilings, real wall openings and door headers, an inspection-office/staff flank, and a separately gated maintenance route. Rapscallion, the Peregrine wreck, and the Ember Reach refinery interiors also have enclosed architecture. The outdoor port remains an exterior concourse, with an enclosed boarding airlock.
+
+The wall layout, doorways, roof geometry, and collision come from one measured room plan. Direction signs have readable front faces. Ceiling fixtures light the interiors. Roofs and lintels block the camera; movement ignores overhead geometry. Existing saves and contract progress remain compatible.
+
 ## Start playing
 
 Choose **Take the helm**. Use the bridge navigation table or **JOBS** in the upper-right corner to accept **Paper Trail**. Read the briefing, deploy, secure the archive export beside the core, and return to the extraction airlock. Deliver it at Rapscallion's navigation table. This unlocks **Borrowed Fire**. **Dead Air** is an independent salvage alternative.
@@ -56,6 +62,8 @@ Serve the repository root or generated `dist/` over HTTP. Opening `index.html` a
 
 Automated tests cover both chapter walkthroughs using the actual movement and interaction controller, route reachability for every area, collision and line of sight, exposed and blocked shots, enemy detection, reload and medkit timing, cloak, contract unlocks, duplicate-payment protection, choices, salvage reset, inventory costs, and save round trips.
 
+The new architecture is also inspected through walking-height software renders of the actual scene triangles, including cargo, the checkpoint, maintenance, cooling, and archive entrances. These inspect geometry rather than reproducing the final WebGL lighting and textures.
+
 The development browser in this session has WebGL explicitly disabled. It could load the actual model and run the controller/UI through a test-only renderer, and the menus were inspected, but the 3D renderer, final character appearance, visible animation, visual weapon grip, and device performance could not be verified there. Those remain a first-play validation item. No test renderer or QA page is included in the production build.
 
 This is an opening RPG chapter, not the entire planned BLACKGLASS campaign. Travel uses a destination selection and jump transition; there is no manual spaceflight. Conversations are authored; no paid AI backend is connected. The supplied canonical lore files are unchanged.
@@ -63,7 +71,8 @@ This is an opening RPG chapter, not the entire planned BLACKGLASS campaign. Trav
 ## Source layout
 
 - `src/game.js`: player, camera, combat, input, travel, interactions
-- `src/world.js`: levels, props, population, collision, sight lines
+- `src/architecture.js`: measured rooms, shared-wall openings, ceiling and partition layout
+- `src/world.js`: levels, fitted doors and roofs, props, population, collision, sight lines
 - `src/actors.js`: animated GLB loading and provisional characters
 - `src/state.js`: progression, inventory, contracts, versioned saves
 - `src/content.js`: contracts, cast, equipment, discovered lore
